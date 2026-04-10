@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue.js 練習課程目錄</title>
+    <!-- 引入 Vue 3 以方便管理 Iframe 切換 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        :root {
+            --sidebar-width: 320px;
+            --primary-color: #42b983;
+            --dark-color: #2c3e50;
+            --bg-color: #f0f2f5;
+        }
+        body {
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #app {
+            display: flex;
+            width: 100%;
+        }
+        /* 側邊欄設計 */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+        .sidebar-header {
+            padding: 30px 20px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+        .sidebar-header h1 {
+            font-size: 1.4rem;
+            color: var(--dark-color);
+            margin: 0;
+            font-weight: 700;
+        }
+        .student-id {
+            display: block;
+            font-size: 0.95rem;
+            color: #42b983;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        .menu-list {
+            flex: 1;
+            overflow-y: auto;
+            list-style: none;
+            padding: 20px 15px;
+            margin: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            color: var(--dark-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            font-size: 0.95rem;
+        }
+        .menu-item:hover {
+            background: #f0fdf4;
+            transform: translateX(3px);
+        }
+        .menu-item.active {
+            background: #42b983;
+            color: white;
+            box-shadow: 0 4px 12px rgba(66, 185, 131, 0.2);
+        }
+        .num {
+            font-weight: bold;
+            margin-right: 12px;
+            opacity: 0.6;
+        }
+        .active .num {
+            opacity: 1;
+        }
+
+        /* 內容區域 */
+        .main-content {
+            flex: 1;
+            background: #fff;
+            position: relative;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #94a3b8;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- 質感側邊選單 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Vue.js 基礎課程</h1>
+                <span class="student-id">學號：413730234</span>
+            </div>
+            <ul class="menu-list">
+                <li v-for="(item, index) in menuItems" :key="index">
+                    <div 
+                        class="menu-item" 
+                        :class="{ active: currentUrl === item.url }"
+                        @click="currentUrl = item.url"
+                    >
+                        <span class="num">{{ (index + 1).toString().padStart(2, '0') }}</span>
+                        {{ item.title }}
+                    </div>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- 主內容顯示區域 -->
+        <main class="main-content">
+            <iframe v-if="currentUrl" :src="currentUrl" name="contentFrame"></iframe>
+            <div v-else class="welcome-screen">
+                <svg width="64" height="64" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M78.8 0L64 25.2L49.2 0H0L64 110.8L128 0H78.8Z" fill="#41B883"/>
+                    <path d="M78.8 0L64 25.2L49.2 0H25.6L64 66.5L102.4 0H78.8Z" fill="#35495E"/>
+                </svg>
+                <h2 style="margin-top: 20px; color: #334155;">歡迎來到練習目錄</h2>
+                <p>請點選左側選單開始瀏覽各個練習範例</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+        createApp({
+            data() {
+                return {
+                    currentUrl: '', // 儲存目前 iframe 要顯示的網址
+                    menuItems: [
+                        { title: '我的第一個 Vue 頁面', url: 'ex1/index.html' },
+                        { title: '資料綁定 (姓名與年齡)', url: 'ex2/index.html' },
+                        { title: '事件處理 (Methods)', url: 'ex3/index.html' },
+                        { title: '雙向資料綁定 (v-model)', url: 'ex4/index.html' },
+                        { title: '條件渲染 (v-if / v-else)', url: 'ex5/index.html' },
+                        { title: '列表渲染 (v-for)', url: 'ex6/index.html' },
+                        { title: '計算屬性 (Computed)', url: 'ex7/index.html' },
+                        { title: '樣式與 Class 綁定', url: 'ex8/index.html' },
+                        { title: '綜合練習：待辦事項清單', url: 'ex9/index.html' }
+                    ]
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>
